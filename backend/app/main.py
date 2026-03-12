@@ -53,9 +53,9 @@ def get_conversions(
     date: date_type | None = None,
     db: Session = Depends(get_db)
 ):
-    query = db.query(models.Conversion).order_by(models.Conversion.conversion_date.desc())
+    query = db.query(models.Conversion).order_by(models.Conversion.created_at.desc())
     if date:
-        query   = query.filter(models.Conversion.conversion_date == date).order_by(models.Conversion.conversion_date.desc())
+        query   = query.filter(models.Conversion.conversion_date == date).order_by(models.Conversion.created_at.desc())
     total = query.count()
     conversions = query.offset(offset).limit(limit).all()
     if not conversions:
