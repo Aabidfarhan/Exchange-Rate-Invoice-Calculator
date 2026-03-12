@@ -1,18 +1,13 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { convertCurrency, resetConversion, clearCurrentConversion } from "../redux/conversionSlice";
+import { convertCurrency, resetForm, clearCurrentConversion, setFormField } from "../redux/conversionSlice";
 
 function ConverterForm() {
   const dispatch = useDispatch();
   const { currentConversion, loading, formError } = useSelector(state => state.conversion);
-  const [form, setForm] = useState({
-    usd_amount: "",
-    rate: "",
-    rate_source: "Manual",
-    conversion_date: new Date().toISOString().split("T")[0]
-  });
+  const form = useSelector(state => state.conversion.formData);
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    dispatch(setFormField({ name: e.target.name, value: e.target.value }));
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,14 +15,8 @@ function ConverterForm() {
   };
   const handleReset = () => {
     if (window.confirm("Clear form?")) {
-      setForm({
-        usd_amount: "",
-        rate: "",
-        rate_source: "Manual",
-        conversion_date: new Date().toISOString().split("T")[0]
-      });
-       dispatch(clearCurrentConversion());
-      // dispatch(resetConversion());
+      dispatch(clearCurrentConversion());
+      dispatch(resetForm());
     }
   };
   useEffect(() => {

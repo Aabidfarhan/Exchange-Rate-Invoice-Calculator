@@ -58,16 +58,32 @@ const conversionSlice = createSlice({
     history: [],
     loading: false,
     listError: null,
-    formError: null
+    formError: null,
+    formData: { 
+      usd_amount: "",
+      rate: "",
+      rate_source: "Manual",
+      conversion_date: new Date().toISOString().split("T")[0]
+    }
   },
   reducers: {
-    resetConversion: (state) => {
+    resetForm: (state) => {
       state.currentConversion = null;
       state.formError = null;
       state.listError = null;
+      state.formData = { 
+        usd_amount: "",
+        rate: "",
+        rate_source: "Manual",
+        conversion_date: new Date().toISOString().split("T")[0]
+      };
     },
     clearCurrentConversion: (state) => {
        state.currentConversion = null;
+    },
+    setFormField: (state, action) => {
+      const { name, value } = action.payload;
+      state.formData[name] = value;
     }
   },
 
@@ -84,6 +100,12 @@ const conversionSlice = createSlice({
         state.loading = false;
         state.currentConversion = action.payload;
         state.formError = null;
+        state.formData = { 
+          usd_amount: "",
+          rate: "",
+          rate_source: "Manual",
+          conversion_date: new Date().toISOString().split("T")[0]
+        };
       })
 
       .addCase(convertCurrency.rejected, (state, action) => {
@@ -111,5 +133,5 @@ const conversionSlice = createSlice({
   }
 });
 
-export const { resetConversion, clearCurrentConversion } = conversionSlice.actions;
+export const { resetForm, clearCurrentConversion, setFormField } = conversionSlice.actions;
 export default conversionSlice.reducer;
