@@ -128,11 +128,13 @@ winget install --id Python.Python.3.11 -e
 ```
 
 Create virtual environment:
+```
 py -3.11 -m venv venv
+```
 
 If Python 3.11 is already the default Python version on your system, you can use:
-python -m venv venv
 ```
+python -m venv venv
 ```
 
 Activate environment:
