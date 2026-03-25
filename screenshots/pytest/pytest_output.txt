@@ -1,0 +1,25 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-8.2.2, pluggy-1.6.0
+rootdir: /Users/aabidfarhan/japan project/Exchange-Rate-Invoice-Calculator/backend
+plugins: asyncio-0.23.7, anyio-4.13.0
+asyncio: mode=Mode.STRICT
+collected 4 items
+
+tests/test_api.py ....                                                   [100%]
+
+=============================== warnings summary ===============================
+venv/lib/python3.11/site-packages/starlette/formparsers.py:12
+  /Users/aabidfarhan/japan project/Exchange-Rate-Invoice-Calculator/backend/venv/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+venv/lib/python3.11/site-packages/pydantic/_internal/_config.py:284
+  /Users/aabidfarhan/japan project/Exchange-Rate-Invoice-Calculator/backend/venv/lib/python3.11/site-packages/pydantic/_internal/_config.py:284: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.7/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+venv/lib/python3.11/site-packages/pydantic/_internal/_config.py:334
+  /Users/aabidfarhan/japan project/Exchange-Rate-Invoice-Calculator/backend/venv/lib/python3.11/site-packages/pydantic/_internal/_config.py:334: UserWarning: Valid config keys have changed in V2:
+  * 'orm_mode' has been renamed to 'from_attributes'
+    warnings.warn(message, UserWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 4 passed, 3 warnings in 0.03s =========================

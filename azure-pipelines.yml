@@ -1,0 +1,82 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: BackendTests
+  displayName: 'Run Pytest (Backend)'
+  jobs:
+  - job: Pytest
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.11'
+        architecture: 'x64'
+    
+    - script: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r backend/requirements.txt
+      displayName: 'Install Backend Dependencies'
+
+    - script: |
+        source venv/bin/activate
+        cd backend
+        pytest --junitxml=../test-results/pytest.xml
+      displayName: 'Run Pytest'
+
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/pytest.xml'
+        testRunTitle: 'Backend Pytest Results'
+
+- stage: FrontendTests
+  displayName: 'Run Playwright (Frontend)'
+  dependsOn: BackendTests
+  jobs:
+  - job: Playwright
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
+      displayName: 'Install Node.js'
+
+    - script: |
+        cd frontend
+        npm ci
+      displayName: 'Install Frontend Dependencies'
+
+    - script: |
+        cd frontend
+        npx playwright install --with-deps
+      displayName: 'Install Playwright Browsers'
+
+    - script: |
+        # Start backend
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r backend/requirements.txt
+        cd backend
+        uvicorn app.main:app --port 8000 &
+        
+        # Start frontend
+        cd ../frontend
+        npm start &
+        
+        # Wait for services
+        sleep 10
+        
+        # Run Playwright
+        npx playwright test
+      displayName: 'Execute Playwright Tests'
+
+    - task: PublishPipelineArtifact@1
+      condition: always()
+      inputs:
+        targetPath: 'frontend/playwright-report'
+        artifact: 'playwright-report'
+        publishLocation: 'pipeline'
